@@ -57,7 +57,9 @@ module.exports = {
   output: {
     publicPath: '/dist/',
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist/')
+    path: path.resolve(__dirname, 'dist/'),
+    libraryTarget: 'var',
+    library: 'ui'
   },
   devtool: 'source-map',
   plugins: [
@@ -71,5 +73,6 @@ module.exports = {
       index: 'index.htm',
       server: { baseDir: ['dist'] }
     })
+  
   ]
 };

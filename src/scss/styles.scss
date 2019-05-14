@@ -1,15 +1,28 @@
-$fontColor: #0091aa;
-$colorHeading: #be4a14;
+$logoColor: #ff0000;
+$colorBlack:  #000000;
+$colorLigtGreen: #00ff11;
+$colorLigtRed: #ff0000;
+
 #content  // div with id: content
 {
-    color: $fontColor;
+    color: $colorBlack;
 }
 
 h2
 {
-    color: $colorHeading;
+    color: $colorBlack;
 }
 
 h1{
-    @extend h2;
+    color: $logoColor;
+}
+
+#colorGreen
+{
+    color: $colorLigtGreen;
+}
+
+#colorBlack
+{
+    color: $colorBlack;
 }

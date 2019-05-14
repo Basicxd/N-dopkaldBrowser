@@ -5,6 +5,10 @@ const uri:string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net
 
 let divElement:HTMLDivElement = <HTMLDivElement> document.getElementById("content")
 
+//let button:HTMLButtonElement = <HTMLButtonElement> document.getElementById("getAllSensor")
+window.addEventListener('load', getAllSensor)
+getAllSensor()
+switchlight("on")
 
 function getAllSensor():void{
     
@@ -38,7 +42,37 @@ function getAllSensor():void{
     .catch(function (error:AxiosError):void{
             divElement.innerHTML= error.message;
     })
+    // Resests the script every 1 sec
+    setTimeout(getAllSensor, 1000)
 }
+
+
+module.exports = function switchlight(x:string){
+    if(x == "on"){
+        var newPara = document.createElement("p");
+
+        var newContent = document.createTextNode("Room 1: Good");
+
+        newPara.appendChild(newContent);
+
+        var currentDiv = document.getElementById("div1"); 
+        document.body.insertBefore(newPara, currentDiv);
+    }
+    if (x == "off") {
+        var newPara = document.createElement("p");
+
+        var newContent = document.createTextNode("Room 1: Help");
+
+        newPara.appendChild(newContent);
+
+        var currentDiv = document.getElementById("div1"); 
+        document.body.insertBefore(newPara, currentDiv);
+    } else {
+        console.log("Error")
+    }
+
+}
+
 
 function CreateLiElement(tekst:string, classAttribut:string, id: number) : HTMLLIElement{
     
@@ -55,4 +89,5 @@ function CreateLiElement(tekst:string, classAttribut:string, id: number) : HTMLL
 
 
 
+  
 
