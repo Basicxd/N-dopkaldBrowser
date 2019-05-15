@@ -2,15 +2,22 @@ $logoColor: #ff0000;
 $colorBlack:  #000000;
 $colorLigtGreen: #00ff11;
 $colorLigtRed: #ff0000;
+$colorForColumnBackGround: rgba(95, 95, 95, 0.075);
+$height: 21px;
 
 #content  // div with id: content
 {
     color: $colorBlack;
 }
 
-h2
+.content  // div with id: content
 {
     color: $colorBlack;
+}
+
+h2
+{
+    color: rgb(230, 230, 230);
 }
 
 h1{
@@ -30,3 +37,34 @@ h1{
     color: $colorBlack;
 
 }
+
+.row 
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 27%;
+    text-align: center;
+}
+  
+.column 
+{
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+  
+.blue-column 
+{
+    background-color: $colorForColumnBackGround;
+    height: $height;
+    color: $colorBlack;
+}
+  
+.green-column 
+{
+    height: $height;
+    background-color: $colorForColumnBackGround;
+}
+
