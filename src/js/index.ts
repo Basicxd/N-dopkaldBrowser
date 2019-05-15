@@ -5,10 +5,18 @@ const uri:string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net
 
 let divElement:HTMLDivElement = <HTMLDivElement> document.getElementById("content")
 
-//let button:HTMLButtonElement = <HTMLButtonElement> document.getElementById("getAllSensor")
-window.addEventListener('load', getAllSensor)
-getAllSensor()
-switchlight("on")
+let buttonforAllSenosr:HTMLDivElement = <HTMLDivElement> document.getElementById("getAllSensor")
+let switchlightDiv:HTMLDivElement = <HTMLDivElement> document.getElementById("getSwitch")
+
+if ( switchlightDiv !== null)
+{
+    switchlight("on")
+}
+
+if ( buttonforAllSenosr !== null)
+{
+    window.addEventListener('load',  getAllSensor)
+}
 
 function getAllSensor():void{
     
@@ -47,7 +55,8 @@ function getAllSensor():void{
 }
 
 
-module.exports = function switchlight(x:string){
+
+function switchlight(x:string){
     if(x == "on"){
         var newPara = document.createElement("p");
 
@@ -70,7 +79,6 @@ module.exports = function switchlight(x:string){
     } else {
         console.log("Error")
     }
-
 }
 
 
