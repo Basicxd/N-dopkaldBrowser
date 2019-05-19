@@ -2,22 +2,30 @@ $logoColor: #ff0000;
 $colorBlack:  #000000;
 $colorLigtGreen: #00ff11;
 $colorLigtRed: #ff0000;
-$colorForColumnBackGround: rgba(95, 95, 95, 0.075);
+$colorForColumnBackGround: rgba(255, 255, 255, 0.11);
 $height: 21px;
+
+// . is Class
+// # is Id
 
 #content  // div with id: content
 {
     color: $colorBlack;
 }
 
-.content  // div with id: content
+.lining  // div with id: content
 {
     color: $colorBlack;
+    text-align: center;
 }
 
 h2
 {
     color: rgb(230, 230, 230);
+}
+
+p {
+    color: $colorBlack;
 }
 
 h1{
@@ -43,7 +51,7 @@ h1{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 27%;
+    width: 22%;
     text-align: center;
 }
   
@@ -68,3 +76,38 @@ h1{
     background-color: $colorForColumnBackGround;
 }
 
+body {
+    width:100%;
+	margin:auto;
+}
+
+#header {
+    background: -webkit-linear-gradient(left, #ff0000, #bc0f0f);
+    background: -moz-linear-gradient(left, #ff0000, #bc0f0f);
+    background: -ms-linear-gradient(left, #ff0000, #bc0f0f);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0f4dbc', endColorstr='#00a9e0', GradientType=1);
+    color: #fff;
+    height: 30px;
+    left: 0;
+    line-height: 30px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+}
+
+#wrapper {
+    display:block;
+	width:90%;
+	margin:auto;
+}
+
+#contentWrapper {
+    display:block;
+	width:80%;
+	margin:auto;
+  }
+
+.div{
+    display:block;
+}

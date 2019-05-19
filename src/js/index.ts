@@ -5,14 +5,19 @@ const uri: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.ne
 
 let divElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content")
 
-let buttonforAllSenosr: HTMLDivElement = <HTMLDivElement>document.getElementById("getAllSensor")
+let thisCountMyList: HTMLDivElement = <HTMLDivElement>document.getElementById("thisCountMyList")
+
+if (thisCountMyList !== null) {
+    amountofRegi()
+}
+
 let showsRoom: HTMLDivElement = <HTMLDivElement>document.getElementById("showsRoomIfGood")
-
-
 
 if (showsRoom !== null) {
     showsRoomIfGood()
 }
+
+let buttonforAllSenosr: HTMLDivElement = <HTMLDivElement>document.getElementById("getAllSensor")
 
 if (buttonforAllSenosr !== null) {
     getAllSensor()
@@ -23,12 +28,7 @@ if (buttonforAllSenosr !== null) {
 let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
 buttonDelete.addEventListener('click', deleteAllContentTable);
 
-let buttonMessage: HTMLButtonElement = <HTMLButtonElement>document.getElementById("messageButton");
-buttonMessage.addEventListener('click', sendMessageTele);
-
-
 function getAllSensor(): void {
-
     axios.get<ISensor[]>(uri)
         .then(function (repsonse: AxiosResponse<ISensor[]>): void {
 
@@ -82,6 +82,15 @@ function roomSwitch(s: ISensor[]): ISensor[] {
     return ListofSomething
 }
 
+function roomSwitch1(s: ISensor[]): ISensor[] {
+
+    let ListofSomething: ISensor[] = new Array;
+
+    ListofSomething = s.sort((n1, n2) => Number(n1.motion) - Number(n2.id));
+
+    return ListofSomething
+}
+
 function showsRoomIfGood(): void {
     axios.get<ISensor[]>(uri)
         .then(function (response: AxiosResponse<ISensor[]>): void {
@@ -95,10 +104,10 @@ function showsRoomIfGood(): void {
 
 
             if (biggestID.motion == "Intruders here") {
-                divElement.innerHTML = "Rum 1: HELP!!"
+                divElement.innerText = "Rum 1: HELP!!"
             }
             else {
-                divElement.innerHTML = "Rum 1: Good"
+                divElement.innerText = "Rum 1: Good"
             }
         })
         .catch(
@@ -132,7 +141,33 @@ function deleteAllContentTable<ISensor>(): void {
     console.log("Delete Working")
 }
 
-function sendMessageTele(): void {   
+function amountofRegi(): void {
+    axios.get<ISensor[]>(uri)
+    .then(function (repsonse: AxiosResponse<ISensor[]>): void {
 
-    console.log("Delete Working");
+        let olElement: HTMLOListElement = document.createElement('ol');
+
+        let x: number = 0;
+
+        repsonse.data.forEach((sensor: ISensor) => {
+            x++
+            if (sensor == null) {
+                olElement.appendChild(CreateLiElement("NULL element", "error", x));
+            }
+            else {
+                let tekst: string = "Dato: " + sensor.dato + " Tid: " + sensor.tid + " Motion: " + sensor.motion;
+                olElement.appendChild(CreateLiElement(tekst, "r1", sensor.id));
+            }
+        });
+
+        if (divElement.firstChild)
+            divElement.removeChild(divElement.firstElementChild);
+
+        divElement.appendChild(olElement);
+    }
+    )
+    .catch(function (error: AxiosError): void {
+        divElement.innerHTML = error.message;
+    })
 }
+
