@@ -10,8 +10,7 @@ let showsRoom: HTMLDivElement = <HTMLDivElement>document.getElementById("showsRo
 
 
 
-
-if (showsRoom  !== null) {
+if (showsRoom !== null) {
     showsRoomIfGood()
 }
 
@@ -23,6 +22,9 @@ if (buttonforAllSenosr !== null) {
 
 let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
 buttonDelete.addEventListener('click', deleteAllContentTable);
+
+let buttonMessage: HTMLButtonElement = <HTMLButtonElement>document.getElementById("messageButton");
+buttonMessage.addEventListener('click', sendMessageTele);
 
 
 function getAllSensor(): void {
@@ -83,13 +85,13 @@ function roomSwitch(s: ISensor[]): ISensor[] {
 function showsRoomIfGood(): void {
     axios.get<ISensor[]>(uri)
         .then(function (response: AxiosResponse<ISensor[]>): void {
-            console.log(response);
+            //console.log(response);
 
             let myList: ISensor[] = new Array;
             myList = response.data;
             let sortedList = roomSwitch(myList).reverse();
             let biggestID = sortedList[0];
-            console.log("Workss");
+            //console.log("Workss");
 
 
             if (biggestID.motion == "Intruders here") {
@@ -102,11 +104,11 @@ function showsRoomIfGood(): void {
         .catch(
             function (error: AxiosError): void {
                 console.log("errrrrrror in my code")
-                console.log(error);
+                //console.log(error);
             }
 
         )
-    console.log("Workss");
+    //console.log("Workss");
 
     setTimeout(showsRoomIfGood, 1000)
 }
@@ -130,3 +132,7 @@ function deleteAllContentTable<ISensor>(): void {
     console.log("Delete Working")
 }
 
+function sendMessageTele(): void {   
+
+    console.log("Delete Working");
+}
