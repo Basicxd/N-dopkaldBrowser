@@ -6,20 +6,23 @@ const uri: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.ne
 let divElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content")
 
 let buttonforAllSenosr: HTMLDivElement = <HTMLDivElement>document.getElementById("getAllSensor")
-let switchlightDiv: HTMLSpanElement = <HTMLSpanElement>document.getElementById("getSwitch")
+let showsRoom: HTMLDivElement = <HTMLDivElement>document.getElementById("showsRoomIfGood")
 
-let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
-buttonDelete.addEventListener('click', deleteAllContentTable);
 
-if (switchlightDiv !== null) {
-    window.addEventListener('load', doesSomething)
+
+
+if (showsRoom  !== null) {
+    showsRoomIfGood()
 }
 
 if (buttonforAllSenosr !== null) {
-    window.addEventListener('load', getAllSensor)
+    getAllSensor()
 }
 
 
+
+let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
+buttonDelete.addEventListener('click', deleteAllContentTable);
 
 
 function getAllSensor(): void {
@@ -37,7 +40,7 @@ function getAllSensor(): void {
                     olElement.appendChild(CreateLiElement("NULL element", "error", x));
                 }
                 else {
-                    let tekst: string = "Dato: " + sensor.dato + " Tid: " + sensor.tid + " " + sensor.motion;
+                    let tekst: string = "Dato: " + sensor.dato + " Tid: " + sensor.tid + " Motion: " + sensor.motion;
                     olElement.appendChild(CreateLiElement(tekst, "r1", sensor.id));
                 }
             });
@@ -77,8 +80,7 @@ function roomSwitch(s: ISensor[]): ISensor[] {
     return ListofSomething
 }
 
-function doesSomething(): void {
-
+function showsRoomIfGood(): void {
     axios.get<ISensor[]>(uri)
         .then(function (response: AxiosResponse<ISensor[]>): void {
             console.log(response);
@@ -87,14 +89,14 @@ function doesSomething(): void {
             myList = response.data;
             let sortedList = roomSwitch(myList).reverse();
             let biggestID = sortedList[0];
+            console.log("Workss");
 
 
-
-            if (biggestID.motion == "Actions: ('intruders here', 1)") {
-                divElement.innerHTML = "Rum 1:" + " " + "Good"
+            if (biggestID.motion == "Intruders here") {
+                divElement.innerHTML = "Rum 1: HELP!!"
             }
             else {
-                divElement.innerHTML = "Rum 1:" + " " + "HELP!!"
+                divElement.innerHTML = "Rum 1: Good"
             }
         })
         .catch(
@@ -104,9 +106,9 @@ function doesSomething(): void {
             }
 
         )
-    console.log("er i slutning af getAllCustomers function");
+    console.log("Workss");
 
-    setTimeout(doesSomething, 1000)
+    setTimeout(showsRoomIfGood, 1000)
 }
 
 function deleteAllContentTable<ISensor>(): void {
@@ -127,5 +129,4 @@ function deleteAllContentTable<ISensor>(): void {
         )
     console.log("Delete Working")
 }
-
 
