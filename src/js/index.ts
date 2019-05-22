@@ -2,6 +2,7 @@ import axios, { AxiosResponse, AxiosError } from "../../node_modules/axios/index
 import { ISensor } from "../js/ISensor"
 
 const uri: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/n%C3%B8dopkald/"
+const alerturi: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/alert/"
 
 let divElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content")
 
@@ -24,11 +25,12 @@ if (buttonforAllSenosr !== null) {
 }
 
 
-
 let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
 buttonDelete.addEventListener('click', deleteAllContentTable);
 
+
 function getAllSensor(): void {
+
     axios.get<ISensor[]>(uri)
         .then(function (repsonse: AxiosResponse<ISensor[]>): void {
 
@@ -82,44 +84,58 @@ function roomSwitch(s: ISensor[]): ISensor[] {
     return ListofSomething
 }
 
-function roomSwitch1(s: ISensor[]): ISensor[] {
-
-    let ListofSomething: ISensor[] = new Array;
-
-    ListofSomething = s.sort((n1, n2) => Number(n1.motion) - Number(n2.id));
-
-    return ListofSomething
-}
-
 function showsRoomIfGood(): void {
-    axios.get<ISensor[]>(uri)
+    axios.get<ISensor[]>(alerturi)
         .then(function (response: AxiosResponse<ISensor[]>): void {
-            //console.log(response);
+            console.log(response);
+            console.log("Show Room If good here")
 
             let myList: ISensor[] = new Array;
             myList = response.data;
-            let sortedList = roomSwitch(myList).reverse();
-            let biggestID = sortedList[0];
-            //console.log("Workss");
+            let sortedLis
+            t = roomSwitch(myList).reverse();
+            
+            let counted = sortedList.length;
 
+            showsRoom.innerHTML = "<p>" + counted + "</p>"
 
-            if (biggestID.motion == "Intruders here") {
-                divElement.innerText = "Rum 1: HELP!!"
-            }
-            else {
-                divElement.innerText = "Rum 1: Good"
-            }
+            // if(biggestID.motion = "Intruders here")
+            // {
+            //     console.log("Intruder got here")
+            //     deleteAllFromAlertTable();
+            // }
+
         })
         .catch(
             function (error: AxiosError): void {
                 console.log("errrrrrror in my code")
-                //console.log(error);
+                console.log(error);
             }
-
         )
-    //console.log("Workss");
+        setTimeout(getAllSensor, 1000)
 
-    setTimeout(showsRoomIfGood, 1000)
+}
+
+function deleteAllFromAlertTable<ISensor>(): void {
+    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete");
+
+    let delUri: string = alerturi;
+    axios.delete(delUri)
+        .then(
+            (response: AxiosResponse) => {
+                console.log(JSON.stringify(response));
+                console.log("I'm in delete Alert Table")
+                //output.innerHTML = response.status + " " + response.statusText;
+            }
+        )
+        .catch(
+            (error: AxiosError) => {
+                output.innerHTML = error.response.statusText;
+                console.log("Fejl  in delete Alert Table")
+            }
+        )
+    console.log("Delete Working")
+    setTimeout(getAllSensor, 1000)
 }
 
 function deleteAllContentTable<ISensor>(): void {
@@ -141,33 +157,31 @@ function deleteAllContentTable<ISensor>(): void {
     console.log("Delete Working")
 }
 
+
+
 function amountofRegi(): void {
+    thisCountMyList.innerHTML = "<h1>Test</h1>"
     axios.get<ISensor[]>(uri)
-    .then(function (repsonse: AxiosResponse<ISensor[]>): void {
+        .then(function (response: AxiosResponse<ISensor[]>): void {
+            //console.log(response);
 
-        let olElement: HTMLOListElement = document.createElement('ol');
+            let myList: ISensor[] = new Array;
+            myList = response.data;
+            let sortedList = roomSwitch(myList).reverse();
 
-        let x: number = 0;
+            let minus = sortedList.length / 2;
 
-        repsonse.data.forEach((sensor: ISensor) => {
-            x++
-            if (sensor == null) {
-                olElement.appendChild(CreateLiElement("NULL element", "error", x));
+            thisCountMyList.innerHTML = "Amout" + minus;
+        })
+        .catch(
+            function (error: AxiosError): void {
+                console.log("errrrrrror in my code")
+                //console.log(error);
             }
-            else {
-                let tekst: string = "Dato: " + sensor.dato + " Tid: " + sensor.tid + " Motion: " + sensor.motion;
-                olElement.appendChild(CreateLiElement(tekst, "r1", sensor.id));
-            }
-        });
 
-        if (divElement.firstChild)
-            divElement.removeChild(divElement.firstElementChild);
+        )
+    //console.log("Workss");
 
-        divElement.appendChild(olElement);
-    }
-    )
-    .catch(function (error: AxiosError): void {
-        divElement.innerHTML = error.message;
-    })
+    setTimeout(showsRoomIfGood, 1000)
 }
 

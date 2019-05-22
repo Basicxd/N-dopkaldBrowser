@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "googleapis": "^40.0.0",
     "messaging-api-telegram": "^0.7.11",
     "node-telegram-bot-api": "^0.30.0",
     "twilio": "^3.31.0"
