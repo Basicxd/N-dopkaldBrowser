@@ -1,8 +1,8 @@
 import axios, { AxiosResponse, AxiosError } from "../../node_modules/axios/index";
-import { ISensor } from "../js/ISensor"
+import { ISensor } from "../js/ISensor";
 
-const uri: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/n%C3%B8dopkald/"
-const alerturi: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/alert/"
+const uri: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/nødopkald"
+const alerturi: string = "https://xn--restndopkald20190514095809-zwc.azurewebsites.net/api/alert"
 
 let divElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content")
 
@@ -24,11 +24,11 @@ if (buttonforAllSenosr !== null) {
     getAllSensor()
 }
 
-
 let buttonDelete: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
-buttonDelete.addEventListener('click', deleteAllContentTable);
+buttonDelete.addEventListener('click', deleteAllContentFromNødopkald);
 
 
+//Get funktionen for historik rum 1
 function getAllSensor(): void {
 
     axios.get<ISensor[]>(uri)
@@ -62,6 +62,104 @@ function getAllSensor(): void {
     setTimeout(getAllSensor, 1000)
 }
 
+// Nofikation meddelelse Kan laves bedre
+function showsRoomIfGood(): void {
+    axios.get<ISensor[]>(alerturi)
+        .then(function (response: AxiosResponse<ISensor[]>): void {
+            console.log(response);
+            console.log("Show Room If good here")
+
+            let myList: ISensor[] = new Array;
+            myList = response.data;
+            let notSortedList = roomSwitch(myList).reverse();
+            let notstart = notSortedList[0]
+
+            showsRoom.innerHTML = notstart.motion
+            if (notstart.motion == "Intruders here") {
+
+                deleteAllFromAlertTable();
+                showsRoom.innerHTML = "<p> A Person is in the Toliet </p>"
+                if (notSortedList.length > 30) {
+                    alert("Go to rum one")
+                    showsRoom.innerHTML = "<p> HELP IN ROOM ONE </p>"
+                }
+                else if (notstart.motion == "Intruders here") {
+                    deleteAllFromAlertTable();
+                    setTimeout(getAllSensor, 1000)
+                }
+            }
+            else {
+                showsRoom.innerHTML = "<p> No one i the Toliet </p>"
+            }
+
+        })
+        .catch(
+            function (error: AxiosError): void {
+                console.log("errrrrrror in my code")
+                console.log(error);
+            }
+        )
+
+}
+
+// Viser hvormange TolietBesøg
+function amountofRegi(): void {
+    axios.get<ISensor[]>(uri)
+        .then(function (response: AxiosResponse<ISensor[]>): void {
+            //console.log(response);
+            let myList: ISensor[] = new Array;
+            myList = response.data;
+            let sortedList = roomSwitch(myList).reverse();
+
+            let minus = sortedList.length / 2;
+
+            thisCountMyList.innerHTML = "Amout" + minus;
+        })
+        .catch(
+            function (error: AxiosError): void {
+                console.log("errrrrrror in my code")
+                //console.log(error);
+            }
+        )
+    //console.log("Workss");
+    setTimeout(showsRoomIfGood, 1000)
+}
+
+// Delete Funktioner 
+function deleteAllFromAlertTable<ISensor>(): void {
+    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete2");
+    axios.delete(alerturi)
+        .then(
+            (response: AxiosResponse) => {
+                console.log(JSON.stringify(response));
+            }
+        )
+        .catch(
+            (error: AxiosError) => {
+                output.innerHTML = error.response.statusText;
+            }
+        )
+    console.log("Delete Working")
+}
+
+function deleteAllContentFromNødopkald<ISensor>(): void {
+    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete");
+    axios.delete(uri)
+        .then(
+            (response: AxiosResponse) => {
+                console.log(JSON.stringify(response));
+                //output.innerHTML = response.status + " " + response.statusText;
+            }
+        )
+        .catch(
+            (error: AxiosError) => {
+                output.innerHTML = error.response.statusText;
+            }
+        )
+    console.log("Delete Working")
+}
+
+//Små Funktioner 
 function CreateLiElement(tekst: string, classAttribut: string, id: number): HTMLLIElement {
 
     let newLiElement = document.createElement('li');
@@ -83,105 +181,3 @@ function roomSwitch(s: ISensor[]): ISensor[] {
 
     return ListofSomething
 }
-
-function showsRoomIfGood(): void {
-    axios.get<ISensor[]>(alerturi)
-        .then(function (response: AxiosResponse<ISensor[]>): void {
-            console.log(response);
-            console.log("Show Room If good here")
-
-            let myList: ISensor[] = new Array;
-            myList = response.data;
-            let sortedLis
-            t = roomSwitch(myList).reverse();
-            
-            let counted = sortedList.length;
-
-            showsRoom.innerHTML = "<p>" + counted + "</p>"
-
-            // if(biggestID.motion = "Intruders here")
-            // {
-            //     console.log("Intruder got here")
-            //     deleteAllFromAlertTable();
-            // }
-
-        })
-        .catch(
-            function (error: AxiosError): void {
-                console.log("errrrrrror in my code")
-                console.log(error);
-            }
-        )
-        setTimeout(getAllSensor, 1000)
-
-}
-
-function deleteAllFromAlertTable<ISensor>(): void {
-    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete");
-
-    let delUri: string = alerturi;
-    axios.delete(delUri)
-        .then(
-            (response: AxiosResponse) => {
-                console.log(JSON.stringify(response));
-                console.log("I'm in delete Alert Table")
-                //output.innerHTML = response.status + " " + response.statusText;
-            }
-        )
-        .catch(
-            (error: AxiosError) => {
-                output.innerHTML = error.response.statusText;
-                console.log("Fejl  in delete Alert Table")
-            }
-        )
-    console.log("Delete Working")
-    setTimeout(getAllSensor, 1000)
-}
-
-function deleteAllContentTable<ISensor>(): void {
-    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete");
-
-    let delUri: string = uri;
-    axios.delete(delUri)
-        .then(
-            (response: AxiosResponse) => {
-                console.log(JSON.stringify(response));
-                //output.innerHTML = response.status + " " + response.statusText;
-            }
-        )
-        .catch(
-            (error: AxiosError) => {
-                output.innerHTML = error.response.statusText;
-            }
-        )
-    console.log("Delete Working")
-}
-
-
-
-function amountofRegi(): void {
-    thisCountMyList.innerHTML = "<h1>Test</h1>"
-    axios.get<ISensor[]>(uri)
-        .then(function (response: AxiosResponse<ISensor[]>): void {
-            //console.log(response);
-
-            let myList: ISensor[] = new Array;
-            myList = response.data;
-            let sortedList = roomSwitch(myList).reverse();
-
-            let minus = sortedList.length / 2;
-
-            thisCountMyList.innerHTML = "Amout" + minus;
-        })
-        .catch(
-            function (error: AxiosError): void {
-                console.log("errrrrrror in my code")
-                //console.log(error);
-            }
-
-        )
-    //console.log("Workss");
-
-    setTimeout(showsRoomIfGood, 1000)
-}
-
