@@ -113,7 +113,7 @@ function amountofRegi(): void {
 
             let minus = sortedList.length / 2;
 
-            thisCountMyList.innerHTML = "Amout" + minus;
+            thisCountMyList.innerHTML = "Toliet Besøg:" + minus;
         })
         .catch(
             function (error: AxiosError): void {
